@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Studex // المخطط الأكاديمي</title>
+    
+    <!-- PWA & Mobile Configuration -->
+    <meta name="theme-color" content="#100E17">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Studex">
+    
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="fx-noise"></div>
+    <div class="hud-ambient" aria-hidden="true">
+        <div class="bg-tech-grid"></div>
+    </div>
+
+    <!-- In-App Daily Summary Reminder -->
+    <div id="daily-summary-modal" class="tech-modal-overlay">
+        <div class="tech-modal-box">
+            <div class="modal-top-bar eng-text" dir="ltr">
+                <span>DAILY_BRIEF.EXE</span>
+                <button class="close-btn" aria-label="Close" onclick="hideModal('daily-summary-modal')">X</button>
+            </div>
+            <div class="modal-body" id="daily-summary-body">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PWA Install Modal -->
+    <div id="pwa-install-modal" class="tech-modal-overlay">
+        <div class="tech-modal-box">
+            <div class="modal-top-bar eng-text" dir="ltr">
+                <span>SYSTEM_INSTALL.EXE</span>
+                <button class="close-btn" aria-label="Close" onclick="hideModal('pwa-install-modal')">X</button>
+            </div>
+            <div class="modal-body">
+                <h3 class="mb-2">تثبيت Studex</h3>
+                <p class="text-muted mb-3">قم بتثبيت Studex كتطبيق أساسي على جهازك للوصول إليه بدون إنترنت وبأداء أفضل.</p>
+                <button class="solid-btn primary-btn w-full" id="modal-install-btn">
+                    <span class="btn-text">تثبيت التطبيق</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header class="sys-header">
+        <div class="sys-data">
+            <img src="assets/logo.svg" alt="Studex Logo" class="header-mobile-logo">
+            <span class="tech-blink"></span>
+            <span class="eng-text text-accent" dir="ltr">STUDEX_v1</span>
+            <span class="separator">/</span>
+            <span class="eng-text text-muted" dir="ltr">STATUS: ONLINE</span>
+        </div>
+        <button class="sys-btn" id="sfx-toggle" onclick="toggleAudio()" aria-label="Toggle Sound">
+            <span class="eng-text" id="sfx-status" dir="ltr">SND: ON</span>
+        </button>
+    </header>
+
+    <nav class="mech-nav">
+        <div class="nav-branding desktop-only eng-text" dir="ltr">
+            <div class="barcode">||| |||| | |||</div>
+            <img src="assets/logo.svg" alt="Studex Logo" class="site-logo">
+            <div class="sub-brand">ACADEMIC_DB</div>
+        </div>
+
+        <div class="nav-cluster">
+            <button class="mech-nav-btn active" data-target="dashboard">
+                <span class="nav-idx eng-text" dir="ltr">01</span>
+                <span class="nav-txt">الرئيسية<br><span class="eng-text" style="font-size:0.65rem; color:var(--c-text-muted);">Dashboard</span></span>
+            </button>
+            <button class="mech-nav-btn" data-target="schedule">
+                <span class="nav-idx eng-text" dir="ltr">02</span>
+                <span class="nav-txt">الجدول اليومي<br><span class="eng-text" style="font-size:0.65rem; color:var(--c-text-muted);">Schedule</span></span>
+            </button>
+            <button class="mech-nav-btn" data-target="subjects">
+                <span class="nav-idx eng-text" dir="ltr">03</span>
+                <span class="nav-txt">المواد الدراسية<br><span class="eng-text" style="font-size:0.65rem; color:var(--c-text-muted);">Subjects</span></span>
+            </button>
+            <button class="mech-nav-btn" data-target="analytics">
+                <span class="nav-idx eng-text" dir="ltr">04</span>
+                <span class="nav-txt">الإحصائيات<br><span class="eng-text" style="font-size:0.65rem; color:var(--c-text-muted);">Analytics</span></span>
+            </button>
+            <button class="mech-nav-btn" data-target="settings">
+                <span class="nav-idx eng-text" dir="ltr">05</span>
+                <span class="nav-txt">الإعدادات<br><span class="eng-text" style="font-size:0.65rem; color:var(--c-text-muted);">Settings</span></span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="sys-main">
+        <!-- Dashboard -->
+        <section id="dashboard" class="sys-view active">
+            <div class="tech-panel hero-id-card">
+                <div class="id-decor eng-text" dir="ltr">ACADEMIC_OVERVIEW // AUTH_GRANTED</div>
+                <div class="id-content">
+                    <div class="id-data w-full">
+                        <div class="id-header">
+                            <h1 class="player-codename">مرحباً بك، أيها الطالب</h1>
+                            <span class="rank-box eng-text" id="dash-date-display" dir="ltr">DATE</span>
+                        </div>
+                        <div class="tech-barcode eng-text" id="dash-week-id" dir="ltr">WEEK_ID: NONE</div>
+                        
+                        <div class="xp-gauge">
+                            <div class="gauge-stats eng-text">
+                                <span dir="ltr">PROGRESS: <span id="dash-progress-text" class="text-white">0%</span></span>
+                                <span class="text-muted">تقدم الأسبوع — Weekly Progress</span>
+                            </div>
+                            <div class="gauge-track">
+                                <div id="dash-progress-fill" class="gauge-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tactical-stats-grid mt-3">
+                <div class="stat-block">
+                    <div class="stat-label">إجمالي الجلسات</div>
+                    <div class="stat-val eng-text text-white" id="stat-total" dir="ltr">0</div>
+                    <div class="stat-decor eng-text" dir="ltr">PLANNED_TASKS</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label eng-text">Completed</div>
+                    <div class="stat-val eng-text text-success" id="stat-completed" dir="ltr">0</div>
+                    <div class="stat-decor eng-text" dir="ltr">OP_SUCC</div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-label eng-text">Pending</div>
+                    <div class="stat-val eng-text text-warning" id="stat-remaining" dir="ltr">0</div>
+                    <div class="stat-decor eng-text" dir="ltr">PENDING_AUTH</div>
+                </div>
+            </div>
+
+            <div class="tech-panel mt-3">
+                <div class="panel-top-bar eng-text" dir="ltr">TODAY'S SCHEDULE</div>
+                <ul class="data-feed" id="dash-today-feed">
+                    <!-- Populated dynamically -->
+                </ul>
+                <button class="solid-btn outline-btn mt-2 w-full" onclick="document.querySelector('[data-target=\'schedule\']').click()">
+                    <span class="btn-text">عرض الجدول الكامل</span>
+                </button>
+            </div>
+            
+            <div class="tech-panel mt-3">
+                <div class="panel-top-bar eng-text" dir="ltr">UPCOMING (NEXT 2 DAYS)</div>
+                <ul class="data-feed" id="dash-upcoming-feed">
+                    <!-- Populated dynamically -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Schedule -->
+        <section id="schedule" class="sys-view hidden">
+            <header class="view-header">
+                <div>
+                    <h1 class="view-title">الجدول اليومي</h1>
+                    <p class="view-subtitle text-muted">إدارة مهامك وعملياتك الأكاديمية اليومية — Study Sessions</p>
+                </div>
+            </header>
+
+            <div class="tech-filters" id="schedule-filters" dir="ltr">
+                <button class="filter-btn active" data-day="all">SYS.ALL</button>
+                <!-- Populated with week dates dynamically -->
+            </div>
+
+            <div class="rpg-grid" id="schedule-container">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- Subjects -->
+        <section id="subjects" class="sys-view hidden">
+            <header class="view-header">
+                <div>
+                    <h1 class="view-title">المواد الدراسية</h1>
+                    <p class="view-subtitle text-muted">تتبع تقدمك في جميع التخصصات — Subjects Management</p>
+                </div>
+            </header>
+            <div class="rpg-grid" id="subjects-container">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+        
+        <!-- Subject Detail Sub-view -->
+        <section id="subject-detail" class="sys-view hidden sub-view">
+            <header class="view-header">
+                <div>
+                    <h1 class="view-title" id="subject-detail-title">اسم المادة</h1>
+                    <p class="view-subtitle text-muted eng-text" id="subject-detail-id" dir="ltr">SUB_ID</p>
+                </div>
+                <button class="solid-btn outline-btn" onclick="navigateMain('subjects')">
+                    <span class="btn-text">⬅ عودة</span>
+                </button>
+            </header>
+            <div class="tech-panel mt-2 mb-3">
+                <div class="xp-gauge">
+                    <div class="gauge-stats eng-text" dir="ltr">
+                        <span>COMPLETION: <span id="subject-detail-pct" class="text-white">0%</span></span>
+                        <span class="text-muted" id="subject-detail-count">0 / 0</span>
+                    </div>
+                    <div class="gauge-track">
+                        <div id="subject-detail-fill" class="gauge-fill"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="rpg-grid" id="subject-sessions-container">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <!-- Analytics -->
+        <section id="analytics" class="sys-view hidden">
+            <header class="view-header">
+                <div>
+                    <h1 class="view-title">الإحصائيات</h1>
+                    <p class="view-subtitle text-muted">مقاييس الأداء والسجل — Statistics & Analytics</p>
+                </div>
+            </header>
+            <div class="tactical-stats-grid mt-3">
+                <div class="tech-panel text-center">
+                    <div class="panel-top-bar eng-text" dir="ltr">TOTAL PROGRESS</div>
+                    <div class="eng-text text-accent" style="font-size:2rem; font-weight:900;" id="analytics-pct" dir="ltr">0%</div>
+                </div>
+                <div class="tech-panel text-center">
+                    <div class="panel-top-bar eng-text" dir="ltr">EFFICIENCY RATIO</div>
+                    <div class="eng-text text-success mt-1" style="font-size:1.2rem; font-weight:bold;" id="analytics-ratio" dir="ltr">0 / 0</div>
+                    <p class="text-muted mt-1" style="font-size:0.8rem;">المكتمل مقابل المخطط</p>
+                </div>
+            </div>
+            <div class="tech-panel mt-3">
+                <div class="panel-top-bar eng-text" dir="ltr">SUBJECT PERFORMANCE</div>
+                <div id="analytics-subject-bars" style="display:flex; flex-direction:column; gap:15px;">
+                    <!-- CSS bars populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings -->
+        <section id="settings" class="sys-view hidden">
+            <header class="view-header">
+                <div>
+                    <h1 class="view-title">الإعدادات</h1>
+                    <p class="view-subtitle text-muted">التهيئة، الاستيراد، وإدارة البيانات — System Settings</p>
+                </div>
+            </header>
+
+            <div class="tech-panel mt-3" style="max-width: 600px; margin: 0 auto;">
+                
+                <h3 class="eng-text text-accent mb-2 border-b-subtle pb-1" dir="ltr">SCHEDULE IMPORT</h3>
+                <p class="text-muted mb-2" style="font-size:0.85rem;">استيراد جدول أسبوعي جديد بصيغة JSON. سيتم دمج البيانات مع الحفاظ على الجلسات المكتملة.</p>
+                <input type="file" id="import-file" hidden accept=".json">
+                <button class="solid-btn outline-btn w-full mb-3" onclick="document.getElementById('import-file').click(); playSfx('click')">
+                    <span class="btn-text eng-text">Import JSON Schedule (Merge Mode)</span>
+                </button>
+
+                <h3 class="eng-text text-accent mb-2 border-b-subtle pb-1" dir="ltr">NOTIFICATIONS</h3>
+                <div class="sys-input-group mb-2">
+                    <label>تفعيل إشعارات المتصفح</label>
+                    <button class="solid-btn outline-btn w-full" id="btn-toggle-notif" onclick="toggleNotifications()">
+                        <span class="btn-text eng-text" id="notif-status-text" dir="ltr">OFF</span>
+                    </button>
+                    <p class="text-muted mt-1" style="font-size:0.75rem;">تذكير يومي بالجلسات المجدولة. يتطلب منح الإذن.</p>
+                </div>
+                <div class="sys-input-group mb-3">
+                    <label>وقت التذكير اليومي</label>
+                    <input type="time" id="setting-reminder-time" class="sys-input" onchange="saveReminderTime()">
+                </div>
+
+                <h3 class="eng-text text-accent mb-2 border-b-subtle pb-1" dir="ltr">DATA MANAGEMENT</h3>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <button class="solid-btn outline-btn w-full" onclick="exportBackup()">
+                        <span class="btn-text eng-text">Export Backup (BACKUP.JSON)</span>
+                    </button>
+                    <button class="solid-btn outline-btn w-full" onclick="document.getElementById('restore-file').click(); playSfx('click')">
+                        <span class="btn-text eng-text">Restore Backup (Overwrite All)</span>
+                    </button>
+                    <input type="file" id="restore-file" hidden accept=".json" onchange="restoreBackup(event)">
+                </div>
+                
+                <hr class="tech-hr">
+                <div id="pwa-install-container">
+                    <button id="install-btn" class="solid-btn outline-btn w-full hidden" style="border-color: var(--c-success); color: var(--c-success);">
+                        <span class="btn-text eng-text">Install App (PWA)</span>
+                    </button>
+                    <div id="ios-install-hint" class="hidden text-muted text-center mt-2" style="font-size: 0.8rem;">
+                        للتثبيت على iOS، انقر على مشاركة ⍐ ثم 'إضافة إلى الشاشة الرئيسية'
+                    </div>
+                </div>
+
+                <hr class="tech-hr">
+                <button class="solid-btn danger-btn w-full" onclick="wipeData()">
+                    <span class="btn-text eng-text">WIPE ALL SYSTEM DATA</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="toast-rack" class="sys-toast-rack" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

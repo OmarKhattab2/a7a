@@ -1,0 +1,40 @@
+{
+    "weekId": "2026-W46",
+    "weekStart": "2026-11-09",
+    "weekEnd": "2026-11-15",
+    "subjects": [
+        {
+            "id": "biology",
+            "name": "الأحياء",
+            "sessions": [
+                {
+                    "id": "biology-session-01",
+                    "title": "مراجعة تركيب الخلية",
+                    "date": "2026-11-09",
+                    "durationMinutes": 60,
+                    "status": "pending"
+                },
+                {
+                    "id": "biology-session-02",
+                    "title": "مسائل علم الوراثة",
+                    "date": "2026-11-10",
+                    "durationMinutes": 90,
+                    "status": "pending"
+                }
+            ]
+        },
+        {
+            "id": "physics",
+            "name": "الفيزياء",
+            "sessions": [
+                {
+                    "id": "physics-session-01",
+                    "title": "تدريبات الميكانيكا",
+                    "date": "2026-11-09",
+                    "durationMinutes": 120,
+                    "status": "pending"
+                }
+            ]
+        }
+    ]
+}
